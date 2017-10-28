@@ -1,0 +1,31 @@
+language: go
+
+go:
+    - "master"
+
+sudo: false
+
+branches:
+    only:
+        - master
+
+install:
+  - echo 'Do nothing'
+
+before_script:
+    - git clone -b 'v0.30.2' --single-branch --depth 1 https://github.com/spf13/hugo.git $GOPATH/src/github.com/spf13/hugo
+    - go get -u -v github.com/spf13/hugo
+
+script:
+    - hugo version
+
+before_deploy:
+    - hugo -t hyde
+
+deploy:
+    provider: pages
+    local_dir: public
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+    on:
+        branch: master
